@@ -6,9 +6,9 @@ Transforms basic JDs into detailed, deliverables-focused descriptions suitable f
 import logging
 from typing import Optional, Dict, Any
 from datetime import datetime
-from models import db, JobDescription, GenerationLog
-from claude_client import ClaudeClientService
-from prompts import JD_ENHANCEMENT_PROMPT, JD_ENHANCEMENT_SYSTEM_PROMPT
+from .models import db, JobDescription, GenerationLog
+from .claude_client import ClaudeClientService
+from .prompts import JD_ENHANCEMENT_PROMPT, JD_ENHANCEMENT_SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 

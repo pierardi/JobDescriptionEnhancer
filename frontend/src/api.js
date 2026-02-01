@@ -2,7 +2,21 @@
  * API service for communicating with the backend Flask application
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// API base URL - set via environment variable in Amplify
+// For local development, defaults to localhost:5000
+// For production, MUST set REACT_APP_API_URL in Amplify environment variables
+const getApiBaseUrl = () => {
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  if (process.env.NODE_ENV === 'production') {
+    console.error('REACT_APP_API_URL is not set! Please configure it in Amplify environment variables.');
+    return '';
+  }
+  return 'http://localhost:5000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Default headers for authentication
 const getDefaultHeaders = () => ({

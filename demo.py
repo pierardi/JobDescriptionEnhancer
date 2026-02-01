@@ -2,6 +2,7 @@
 """
 Quick Demo - TechScreen Interview Generator
 Shows how the system works without requiring Claude API key (uses mock mode)
+Run from project root: python demo.py
 """
 
 import sys
@@ -16,14 +17,14 @@ print("This demo shows you what the system does WITHOUT calling the Claude API")
 print("(No API key needed for this demo)")
 print()
 
-# Try to import the necessary modules
+# Try to import the necessary modules (from backend package)
 try:
     from flask import Flask
-    from models import db, JobDescription, Interview, InterviewQuestion
-    from jd_enhancement_service import JDEnhancementService
-    from interview_generation_service import InterviewGenerationService
-    from claude_client import MockClaudeClient
-    from config import TestingConfig
+    from backend.models import db, JobDescription, Interview, InterviewQuestion
+    from backend.jd_enhancement_service import JDEnhancementService
+    from backend.interview_generation_service import InterviewGenerationService
+    from backend.claude_client import MockClaudeClient
+    from backend.config import TestingConfig
     print("✅ All modules imported successfully")
 except ImportError as e:
     print(f"❌ Error importing modules: {e}")

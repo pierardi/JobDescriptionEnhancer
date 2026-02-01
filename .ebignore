@@ -1,0 +1,20 @@
+# Elastic Beanstalk ignore file
+frontend/
+.git/
+.gitignore
+*.md
+.env
+.env.*
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv
+test_*.py
+*.sql
+claude/
+.vscode/
+.idea/

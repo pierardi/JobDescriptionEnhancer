@@ -2,20 +2,23 @@
 Unit tests for JD Enhancement and Interview Generation services.
 Tests cover main flows, error handling, and database operations.
 
-To run tests:
-    pytest tests/ -v
-    pytest tests/ --cov=.  # With coverage
+To run tests from project root:
+    pytest backend/ -v
+    pytest backend/ --cov=backend  # With coverage
+
+To run from backend folder:
+    pytest test_services.py -v
 """
 
 import pytest
 import json
 from datetime import datetime
 from flask import Flask
-from config import TestingConfig
-from models import db, JobDescription, Interview, InterviewQuestion
-from jd_enhancement_service import JDEnhancementService
-from interview_generation_service import InterviewGenerationService
-from claude_client import MockClaudeClient
+from .config import TestingConfig
+from .models import db, JobDescription, Interview, InterviewQuestion
+from .jd_enhancement_service import JDEnhancementService
+from .interview_generation_service import InterviewGenerationService
+from .claude_client import MockClaudeClient
 
 
 @pytest.fixture
@@ -134,6 +137,11 @@ class TestJDEnhancementService:
             assert jd.work_role == work_role
             assert jd.work_knowledge == work_knowledge
             assert jd.work_competencies == work_competencies
+    
+    def test_enhance_jd_update_same_req_id(self, app, mock_claude_client):
+        """Test that re-enhancing same req_id updates existing record."""
+        with app.app_context():
+            service = JDEnhancementService(mock_claude_client)
             
             # First enhancement
             result1 = service.enhance_jd(

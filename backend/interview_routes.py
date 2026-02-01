@@ -7,10 +7,10 @@ import logging
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from functools import wraps
-from models import db, JobDescription, Interview
-from jd_enhancement_service import JDEnhancementService
-from interview_generation_service import InterviewGenerationService
-from claude_client import ClaudeClientService
+from .models import db, JobDescription, Interview
+from .jd_enhancement_service import JDEnhancementService
+from .interview_generation_service import InterviewGenerationService
+from .claude_client import ClaudeClientService
 
 logger = logging.getLogger(__name__)
 
@@ -70,33 +70,6 @@ def enhance_jd():
     """
     Enhance a basic job description using WORK methodology.
     WORK inputs are optional but highly recommended for better results.
-    
-    Request body:
-    {
-        "req_id": "REQ-12345",
-        "basic_title": "Senior Software Engineer",
-        "basic_description": "We are looking for a senior engineer...",
-        "basic_department": "Engineering",
-        "basic_level": "Senior",
-        
-        "work_output": "Design and build microservices that handle 10k transactions/sec",
-        "work_role": "Lead backend engineer, mentor juniors, own service reliability",
-        "work_knowledge": "Kafka, PostgreSQL, Spring Boot, distributed systems",
-        "work_competencies": "System design, problem solving, technical depth"
-    }
-    
-    WORK fields are OPTIONAL:
-    - work_output: What will this person deliver/build?
-    - work_role: What are the key responsibilities?
-    - work_knowledge: What knowledge areas are critical?
-    - work_competencies: What competencies are essential?
-    
-    Response:
-    {
-        "success": true,
-        "job_description_id": 123,
-        "enhanced_jd": {...}
-    }
     """
     try:
         data = request.get_json()
@@ -137,15 +110,7 @@ def enhance_jd():
 @interview_bp.route('/jd/<req_id>', methods=['GET'])
 @require_auth
 def get_jd(req_id):
-    """
-    Retrieve an enhanced job description.
-    
-    Response:
-    {
-        "success": true,
-        "job_description": {...}
-    }
-    """
+    """Retrieve an enhanced job description."""
     try:
         result = jd_enhancement_service.get_enhanced_jd(req_id)
         
@@ -166,23 +131,7 @@ def get_jd(req_id):
 @interview_bp.route('/generate', methods=['POST'])
 @require_admin
 def generate_interview():
-    """
-    Generate a 5-question interview from an enhanced job description.
-    
-    Request body:
-    {
-        "req_id": "REQ-12345",
-        "job_description_id": 123,
-        "interview_name": "Senior Engineer Interview - Q4 2025"
-    }
-    
-    Response:
-    {
-        "success": true,
-        "interview_id": 456,
-        "interview": {...}
-    }
-    """
+    """Generate a 5-question interview from an enhanced job description."""
     try:
         data = request.get_json()
         
@@ -217,15 +166,7 @@ def generate_interview():
 @interview_bp.route('/<int:interview_id>', methods=['GET'])
 @require_auth
 def get_interview(interview_id):
-    """
-    Retrieve a generated interview by ID.
-    
-    Response:
-    {
-        "success": true,
-        "interview": {...}
-    }
-    """
+    """Retrieve a generated interview by ID."""
     try:
         result = interview_generation_service.get_interview(interview_id)
         
@@ -242,15 +183,7 @@ def get_interview(interview_id):
 @interview_bp.route('/req/<req_id>', methods=['GET'])
 @require_auth
 def get_interviews_by_req(req_id):
-    """
-    Retrieve all interviews for a given requisition ID.
-    
-    Response:
-    {
-        "success": true,
-        "interviews": [...]
-    }
-    """
+    """Retrieve all interviews for a given requisition ID."""
     try:
         result = interview_generation_service.get_interview_by_req(req_id)
         
@@ -271,36 +204,7 @@ def get_interviews_by_req(req_id):
 @interview_bp.route('/workflow/jd-only', methods=['POST'])
 @require_admin
 def workflow_jd_enhancement_only():
-    """
-    WORKFLOW 1: JD Enhancement Only
-    
-    Use this when you ONLY want to enhance a job description.
-    Answers WORK questions to guide the enhancement.
-    
-    Request body:
-    {
-        "req_id": "REQ-12345",
-        "basic_title": "Senior Software Engineer",
-        "basic_description": "We are looking for...",
-        
-        "work_output": "Design and build microservices processing 10k transactions/sec",
-        "work_role": "Lead backend engineer, mentor juniors, own service reliability",
-        "work_knowledge": "Kafka, PostgreSQL, Spring Boot, distributed systems, load balancing",
-        "work_competencies": "System design, problem solving, communication, technical depth"
-    }
-    
-    Response:
-    {
-        "success": true,
-        "job_description_id": 123,
-        "enhanced_jd": {
-            "title": "Senior Software Engineer",
-            "description": "Enhanced description with clear deliverables..."
-        },
-        "work_inputs": {...},
-        "tokens_used": 1250
-    }
-    """
+    """WORKFLOW 1: JD Enhancement Only."""
     try:
         data = request.get_json()
         
@@ -342,41 +246,7 @@ def workflow_jd_enhancement_only():
 @interview_bp.route('/workflow/full', methods=['POST'])
 @require_admin
 def workflow_full_jd_and_interview():
-    """
-    WORKFLOW 2: Complete Workflow - JD Enhancement + Interview Generation
-    
-    Use this when you want to BOTH enhance a JD AND generate a 5-question interview.
-    Answers WORK questions to guide the enhancement and interview generation.
-    
-    Request body:
-    {
-        "req_id": "REQ-12345",
-        "basic_title": "Senior Software Engineer",
-        "basic_description": "We are looking for...",
-        "basic_department": "Engineering",
-        "basic_level": "Senior",
-        
-        "work_output": "Design and build microservices processing 10k transactions/sec",
-        "work_role": "Lead backend engineer, mentor juniors, own service reliability",
-        "work_knowledge": "Kafka, PostgreSQL, Spring Boot, distributed systems, load balancing",
-        "work_competencies": "System design, problem solving, communication, technical depth",
-        
-        "interview_name": "Senior Engineer Interview - Q1 2025"
-    }
-    
-    Response:
-    {
-        "success": true,
-        "job_description_id": 123,
-        "interview_id": 456,
-        "req_id": "REQ-12345",
-        "interview": {
-            "id": 456,
-            "questions": [...]
-        },
-        "total_tokens_used": 3350
-    }
-    """
+    """WORKFLOW 2: Complete Workflow - JD Enhancement + Interview Generation."""
     try:
         data = request.get_json()
         
@@ -451,7 +321,5 @@ def workflow_full_jd_and_interview():
 
 @interview_bp.route('/health', methods=['GET'])
 def health_check():
-    """
-    Health check endpoint to verify service is running.
-    """
+    """Health check endpoint to verify service is running."""
     return jsonify({'status': 'healthy', 'timestamp': datetime.utcnow().isoformat()}), 200

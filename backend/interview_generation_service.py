@@ -7,10 +7,10 @@ import logging
 import hashlib
 from typing import Optional, Dict, Any, List
 from datetime import datetime
-from models import db, JobDescription, Interview, InterviewQuestion, QuestionCache, GenerationLog
-from claude_client import ClaudeClientService
-from prompts import INTERVIEW_GENERATION_PROMPT, INTERVIEW_GENERATION_SYSTEM_PROMPT
-from config import Config
+from .models import db, JobDescription, Interview, InterviewQuestion, QuestionCache, GenerationLog
+from .claude_client import ClaudeClientService
+from .prompts import INTERVIEW_GENERATION_PROMPT, INTERVIEW_GENERATION_SYSTEM_PROMPT
+from .config import Config
 
 logger = logging.getLogger(__name__)
 

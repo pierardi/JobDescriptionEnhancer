@@ -9,7 +9,7 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 import time
 from anthropic import Anthropic, APIError, RateLimitError, APIConnectionError
-from config import Config
+from .config import Config
 
 logger = logging.getLogger(__name__)
 

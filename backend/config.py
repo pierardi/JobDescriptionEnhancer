@@ -7,10 +7,19 @@ class Config:
     """Base configuration"""
     
     # Database
-    SQLALCHEMY_DATABASE_URI = os.getenv(
+    # For RDS MySQL or Aurora MySQL, ensure charset=utf8mb4 is in the connection string
+    # Example: mysql+pymysql://user:password@rds-endpoint:3306/jdenhancer?charset=utf8mb4
+    database_url = os.getenv(
         'DATABASE_URL',
         'mysql+pymysql://user:password@localhost/techscreen_db'
     )
+    
+    # Add charset parameter for RDS MySQL/Aurora MySQL compatibility if not present
+    if 'mysql' in database_url and 'charset' not in database_url:
+        separator = '&' if '?' in database_url else '?'
+        database_url = f"{database_url}{separator}charset=utf8mb4"
+    
+    SQLALCHEMY_DATABASE_URI = database_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = os.getenv('SQLALCHEMY_ECHO', 'False') == 'True'
     

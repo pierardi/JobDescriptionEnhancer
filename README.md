@@ -57,7 +57,7 @@ techscreen-interview-generator/
 ### Prerequisites
 
 - Python 3.9+
-- MySQL 5.7+ or MySQL 8.0+
+- MySQL 5.7+ or MySQL 8.0+ (including Aurora MySQL 5.7+ and 8.0+)
 - Claude API Key from Anthropic
 - pip (Python package manager)
 
@@ -77,8 +77,10 @@ pip install -r requirements.txt
 
 ### 2. Database Setup
 
+**For Aurora MySQL or MySQL:**
+
 ```bash
-# Create MySQL database
+# Create MySQL database with utf8mb4 charset (required for Aurora MySQL compatibility)
 mysql -u root -p
 CREATE DATABASE techscreen_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 EXIT;
@@ -86,8 +88,16 @@ EXIT;
 # Initialize Alembic (if not already done)
 alembic init alembic
 
-# Run migrations
+# Run migrations (automatically handles Aurora MySQL 5.7 and 8.0+ compatibility)
 alembic upgrade head
+```
+
+**Alternative: Direct SQL Script (Aurora MySQL)**
+
+You can also use the provided SQL script for Aurora MySQL:
+
+```bash
+mysql -u username -p -h your-aurora-endpoint techscreen_db < aurora_mysql_schema.sql
 ```
 
 ### 3. Environment Configuration
@@ -100,6 +110,9 @@ FLASK_ENV=development
 FLASK_APP=app.py
 
 # Database
+# For Aurora MySQL, use: mysql+pymysql://username:password@aurora-endpoint:3306/techscreen_db?charset=utf8mb4
+# For local MySQL: mysql+pymysql://username:password@localhost:3306/techscreen_db
+# Note: charset=utf8mb4 is automatically added for MySQL connections if not present
 DATABASE_URL=mysql+pymysql://username:password@localhost:3306/techscreen_db
 
 # Claude API
@@ -525,7 +538,22 @@ Configuration is managed through `config.py` with three environments:
 - Debug mode disabled
 - Optimized logging
 - Consider async task queue (Celery)
-- Production database
+- Production database (Aurora MySQL compatible)
+
+### Aurora MySQL Compatibility
+
+The schema is fully compatible with **Aurora MySQL 5.7+ and 8.0+**:
+
+- **Character Set**: All tables use `utf8mb4` with `utf8mb4_unicode_ci` collation for full Unicode support (emojis, international characters)
+- **JSON Columns**: Automatically handled for both Aurora MySQL 5.7 (stored as LONGTEXT) and 8.0+ (native JSON type)
+- **Foreign Keys**: Proper `ON DELETE CASCADE` constraints for data integrity
+- **Table Engine**: Explicitly uses `InnoDB` (Aurora MySQL's default)
+- **Connection String**: Automatically adds `charset=utf8mb4` parameter for proper encoding
+
+**Connection String Example:**
+```
+DATABASE_URL=mysql+pymysql://username:password@aurora-cluster-endpoint:3306/techscreen_db?charset=utf8mb4
+```
 
 ## Error Handling
 
