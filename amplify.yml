@@ -3,22 +3,22 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Node version:"
-        - node --version
-        - echo "NPM version:"
-        - npm --version
+        - echo "Node version:" && node --version
+        - echo "NPM version:" && npm --version
+        - cd frontend
         - echo "Installing dependencies..."
         - npm ci
     build:
       commands:
+        - cd frontend
         - echo "Building React app..."
         - echo "API URL will be: $REACT_APP_API_URL"
         - npm run build
         - echo "Build completed successfully!"
   artifacts:
-    baseDirectory: build
+    baseDirectory: frontend/build
     files:
       - '**/*'
   cache:
     paths:
-      - node_modules/**/*
+      - frontend/node_modules/**/*
