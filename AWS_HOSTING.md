@@ -95,7 +95,7 @@ In **AWS Console** → **Elastic Beanstalk** → your app → **Configuration** 
 Or via CLI:
 
 ```bash
-eb setenv DATABASE_URL="mysql+pymysql://..." CLAUDE_API_KEY="sk-ant-..." FLASK_ENV=production CORS_ORIGINS="*"
+eb setenv DATABASE_URL="mysql+pymysql://..." CLAUDE_API_KEY="your-anthropic-api-key" FLASK_ENV=production CORS_ORIGINS="*"
 ```
 
 ### 2.4 Allow backend to reach RDS

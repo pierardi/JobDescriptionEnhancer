@@ -7,7 +7,6 @@ frontend:
         - node --version
         - echo "NPM version:"
         - npm --version
-        - cd frontend
         - echo "Installing dependencies..."
         - npm ci
     build:
@@ -17,9 +16,9 @@ frontend:
         - npm run build
         - echo "Build completed successfully!"
   artifacts:
-    baseDirectory: frontend/build
+    baseDirectory: build
     files:
       - '**/*'
   cache:
     paths:
-      - frontend/node_modules/**/*
+      - node_modules/**/*

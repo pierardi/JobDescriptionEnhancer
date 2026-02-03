@@ -47,7 +47,7 @@ python demo.py
 ./setup.sh
 
 # 2. Add your Claude API key to .env
-nano .env  # Add: CLAUDE_API_KEY=sk-ant-...
+nano .env  # Add: CLAUDE_API_KEY=your-anthropic-api-key
 
 # 3. Start server
 source venv/bin/activate
@@ -207,7 +207,7 @@ ls -la .env
 # Check key is set
 cat .env | grep CLAUDE_API_KEY
 
-# Make sure it starts with: sk-ant-api03-
+# Get your key from https://console.anthropic.com
 ```
 
 ### Port Issues

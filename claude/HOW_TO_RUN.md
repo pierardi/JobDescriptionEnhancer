@@ -69,7 +69,7 @@ CLAUDE_API_KEY=your-api-key-here
 
 To your actual key:
 ```
-CLAUDE_API_KEY=sk-ant-api03-xxx...
+CLAUDE_API_KEY=your-anthropic-api-key
 ```
 
 Save and exit.
@@ -147,7 +147,7 @@ nano .env
 FLASK_ENV=development
 FLASK_APP=app.py
 DATABASE_URL=sqlite:///techscreen.db
-CLAUDE_API_KEY=sk-ant-api03-your-actual-key-here
+CLAUDE_API_KEY=your-anthropic-api-key
 CLAUDE_MODEL=claude-opus-4-1
 CLAUDE_MAX_TOKENS=4000
 ```
